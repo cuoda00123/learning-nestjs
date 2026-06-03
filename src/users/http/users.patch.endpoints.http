@@ -1,0 +1,12 @@
+
+## patch request
+
+PATCH http://localhost:3000/users
+Content-Type:application/json
+
+{
+  "firstName":"Navneet",
+  "lastName":"Kumar",
+  "email":"gungunnavneet69@gmail.com",
+  "password":"12qwQW@?,,"
+}
