@@ -1,6 +1,8 @@
-PATCH http://localhost:3000/posts
+PATCH http://localhost:3000/posts/7
 Content-Type: application/json
 
 {
-  "id":234
+  "id":6,
+  "title" : "new Update in nest-js",
+  "tags" : [1,2]
 }

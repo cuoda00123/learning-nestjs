@@ -9,10 +9,10 @@ import { PatchPostDto } from './dto/patch.post.dto';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  // @Get('/{:id}')
-  // public getPosts(@Param() id: string) {
-  //   return this.postsService.findAll(id);
-  // }
+  @Get()
+  public getPosts() {
+    return this.postsService.findAll();
+  }
 
   @ApiOperation({
     summary: 'Create a new post',
@@ -26,12 +26,12 @@ export class PostsController {
     return this.postsService.create(createPostDto);
   }
 
-  @Get(':userId')
-  findAll(
+  @Get('/:userId')
+  findAllById(
     @Param('userId', ParseIntPipe)
     userId: number,
   ) {
-    return this.postsService.findAll(userId);
+    return this.postsService.findAllById(userId);
   }
   @ApiOperation({
     summary: 'update post',
@@ -40,9 +40,9 @@ export class PostsController {
     status: 201,
     description: 'The record has been successfully updated.',
   })
-  @Patch('/:id')
+  @Patch()
   public patchPost(@Body() patchPostDto: PatchPostDto) {
-    console.log(patchPostDto);
+    return this.postsService.update(patchPostDto);
   }
 
   @Delete('/:id')

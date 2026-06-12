@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { postStatus, postType } from './types/createPosts.enum';
 // import { CreatePostMetaOptionsDto } from '../meta-options/dto/create-post-metaOptions.dto';
 import { MetaOption } from '../meta-options/meta-option.entity';
@@ -75,7 +83,9 @@ export class Post {
   @ManyToOne(() => User, (user) => user.posts)
   author: User;
 
-  @ManyToMany(() => Tag)
+  @ManyToMany(() => Tag, (tag) => tag.posts, {
+    eager: true,
+  })
   @JoinTable()
   tags?: Tag[];
 }

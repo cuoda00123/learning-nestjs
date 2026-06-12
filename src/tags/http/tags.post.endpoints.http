@@ -2,6 +2,6 @@ POST http://localhost:3000/tags
 Content-Type: application/json
 
 {
-  "name" : "Typescript",
-  "slug" : "new-update-in-typescript"
+  "name" : "c++",
+  "slug" : "new-update-in-c-plus-plus"
 }
