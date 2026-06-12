@@ -1,0 +1,7 @@
+POST http://localhost:3000/tags
+Content-Type: application/json
+
+{
+  "name" : "Typescript",
+  "slug" : "new-update-in-typescript"
+}

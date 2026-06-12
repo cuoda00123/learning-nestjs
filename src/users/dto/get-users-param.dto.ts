@@ -16,5 +16,5 @@ export class GetUserParamDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 }

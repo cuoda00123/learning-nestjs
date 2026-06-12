@@ -5,8 +5,8 @@ import {
   Param,
   Post,
   Query,
-  Headers,
-  Ip,
+  // Headers,
+  // Ip,
   ParseIntPipe,
   DefaultValuePipe,
   Patch,
@@ -62,11 +62,9 @@ export class UsersController {
   }
 
   @Post()
-  public createUser(@Body() createUserDto: CreateUserDto, @Headers() headers: any, @Ip() ip: any) {
+  public createUser(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto);
-    console.log(typeof createUserDto);
-    console.log(createUserDto instanceof CreateUserDto);
-    return 'user created , you send users post request';
+    return this.usersService.createUser(createUserDto);
   }
 
   @Patch()
