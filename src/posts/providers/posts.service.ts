@@ -1,4 +1,4 @@
-import { Body, Injectable } from '@nestjs/common';
+import { BadRequestException, Body, Injectable, RequestTimeoutException } from '@nestjs/common';
 import { UsersService } from '../../users/providers/users.service';
 import { CreatePostDto } from '../dto/create.post.dto';
 import { Post } from '../post.entity';
@@ -8,6 +8,7 @@ import { MetaOption } from '../../meta-options/meta-option.entity';
 import { TagsService } from '../../tags/providers/tags.service';
 import { PatchPostDto } from '../dto/patch.post.dto';
 import { postStatus, postType } from '../types/createPosts.enum';
+import { User } from '../../users/user.entity';
 
 @Injectable()
 export class PostsService {
@@ -24,14 +25,41 @@ export class PostsService {
   ) {}
 
   public async create(createPostDto: CreatePostDto) {
-    const author = await this.usersService.findOneById(createPostDto.authorId);
+    let author: number;
+    let tags: number[];
 
-    const tags = await this.tagsService.findMultipleTags(createPostDto.tags!);
+    try {
+      author = await this.usersService.findOneById(createPostDto.authorId);
+    } catch (error) {
+      throw new RequestTimeoutException(`Something went worng, please try again later`, {
+        description: `Error in finding user, and error is ${error}`,
+      });
+    }
+
+    if (!author) {
+      throw new BadRequestException(`User with id ${createPostDto.authorId} not found`, {
+        description: `User with id ${createPostDto.authorId} not found`,
+      });
+    }
+
+    try {
+      tags = await this.tagsService.findMultipleTags(createPostDto.tags!);
+    } catch (error) {
+      throw new RequestTimeoutException(`Something went worng, please try again later`, {
+        description: `Error in finding tags, and error is ${error}`,
+      });
+    }
+
+    if (!tags) {
+      throw new BadRequestException(`Tags with ids ${createPostDto.tags} not found`, {
+        description: `Tags with ids ${createPostDto.tags} not found`,
+      });
+    }
 
     // Create the post
     const post = this.postsRepository.create({
       ...createPostDto,
-      author: author!,
+      author: author,
       tags: tags,
     });
 

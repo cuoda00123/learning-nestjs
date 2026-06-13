@@ -58,7 +58,7 @@ export class UsersController {
     console.log(getUserParamDto.id);
     console.log(typeof getUserParamDto.id);
 
-    return getUserParamDto;
+    return this.usersService.findALl(getUserParamDto, page, offset);
   }
 
   @Post()
