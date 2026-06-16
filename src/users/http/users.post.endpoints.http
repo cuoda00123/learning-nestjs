@@ -9,3 +9,23 @@ Content-Type:application/json
   "email":"gungunnavneet69@gmail.com",
   "password":"12qwQW@?,,"
 }
+
+
+POST http://localhost:3000/users/create-many
+Content-Type:application/json
+{
+  "users": [
+    {
+      "firstName":"amrit",
+      "lastName":"Kumar",
+      "email":"amrit001@gmail.com",
+      "password":"12qwQW@?,,"
+    },
+     {
+      "firstName":"kajoma",
+      "lastName":"devi",
+      "email":"kajoma@gmail.com",
+      "password":"12qwQW@?,,"
+    }
+  ]
+}

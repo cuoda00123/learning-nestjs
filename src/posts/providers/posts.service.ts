@@ -9,6 +9,10 @@ import { TagsService } from '../../tags/providers/tags.service';
 import { PatchPostDto } from '../dto/patch.post.dto';
 import { postStatus, postType } from '../types/createPosts.enum';
 import { User } from '../../users/user.entity';
+import { Tag } from '../../tags/tag.entity';
+import { getPostsDto } from '../dto/get-post.dto';
+import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
+import { paginated } from '../../common/pagination/interfaces/paginated.interface';
 
 @Injectable()
 export class PostsService {
@@ -22,48 +26,26 @@ export class PostsService {
     private readonly metaOptionRepository: Repository<MetaOption>,
 
     private readonly tagsService: TagsService,
+
+    private readonly paginationProvider: PaginationProvider,
   ) {}
 
   public async create(createPostDto: CreatePostDto) {
-    let author: number;
-    let tags: number[];
-
-    try {
-      author = await this.usersService.findOneById(createPostDto.authorId);
-    } catch (error) {
-      throw new RequestTimeoutException(`Something went worng, please try again later`, {
-        description: `Error in finding user, and error is ${error}`,
-      });
-    }
+    const author = await this.usersService.findOneById(createPostDto.authorId);
 
     if (!author) {
-      throw new BadRequestException(`User with id ${createPostDto.authorId} not found`, {
-        description: `User with id ${createPostDto.authorId} not found`,
-      });
+      throw new BadRequestException(`User with id ${createPostDto.authorId} not found`);
     }
 
-    try {
-      tags = await this.tagsService.findMultipleTags(createPostDto.tags!);
-    } catch (error) {
-      throw new RequestTimeoutException(`Something went worng, please try again later`, {
-        description: `Error in finding tags, and error is ${error}`,
-      });
-    }
+    const tags = await this.tagsService.findMultipleTags(createPostDto.tags!);
 
-    if (!tags) {
-      throw new BadRequestException(`Tags with ids ${createPostDto.tags} not found`, {
-        description: `Tags with ids ${createPostDto.tags} not found`,
-      });
-    }
-
-    // Create the post
     const post = this.postsRepository.create({
       ...createPostDto,
-      author: author,
-      tags: tags,
+      author,
+      tags,
     });
 
-    return await this.postsRepository.save(post);
+    return this.postsRepository.save(post);
   }
 
   public async findAllById(userId: number) {
@@ -84,40 +66,44 @@ export class PostsService {
 
     return posts;
   }
-  public async findAll() {
-    return this.postsRepository.find({
-      relations: {
-        metaOptions: true,
-        author: true,
-        tags: true,
-      },
-    });
+  public async findAll(userId: number, postQuery?: getPostsDto): Promise<paginated<Post>> {
+    const posts = await this.paginationProvider.paginateQuery(
+      { limit: postQuery?.limit, page: postQuery?.page },
+      this.postsRepository,
+    );
+
+    return posts;
   }
 
   public async update(patchPostDto: PatchPostDto) {
-    // find the tags
-    const tags = await this.tagsService.findMultipleTags(patchPostDto.tags!);
-
-    // find the post
-    const post = await this.postsRepository.findOneBy({
-      id: patchPostDto.id,
+    const post = await this.postsRepository.findOne({
+      where: { id: patchPostDto.id },
+      relations: ['tags'],
     });
 
-    //update the properties
-    post!.title = (patchPostDto.title as string) ?? (post?.title as string);
-    post!.slug = (patchPostDto.slug as string) ?? (post?.slug as string);
-    post!.content = (patchPostDto.content as string) ?? (post?.content as string);
-    post!.postType = (patchPostDto.postType as postType) ?? (post?.postType as postType);
-    post!.status = (patchPostDto.status as postStatus) ?? (post?.status as postStatus);
-    post!.featuredImageUrl =
-      (patchPostDto.featuredImageUrl as string) ?? (post?.featuredImageUrl as string);
-    post!.publishOn = (patchPostDto.publishOn as Date) ?? (post?.publishOn as Date);
+    if (!post) {
+      throw new BadRequestException(`Post with id ${patchPostDto.id} not found`);
+    }
 
-    //assign the new tags
-    post!.tags = tags;
+    if (patchPostDto.tags?.length) {
+      const tags = await this.tagsService.findMultipleTags(patchPostDto.tags);
 
-    //save the post and return
-    return await this.postsRepository.save(post!);
+      if (tags.length !== patchPostDto.tags.length) {
+        throw new BadRequestException('Please provide valid tags');
+      }
+
+      post.tags = tags;
+    }
+
+    post.title = patchPostDto.title ?? post.title;
+    post.slug = patchPostDto.slug ?? post.slug;
+    post.content = patchPostDto.content ?? post.content;
+    post.postType = patchPostDto.postType ?? post.postType;
+    post.status = patchPostDto.status ?? post.status;
+    post.featuredImageUrl = patchPostDto.featuredImageUrl ?? post.featuredImageUrl;
+    post.publishOn = patchPostDto.publishOn ?? post.publishOn;
+
+    return this.postsRepository.save(post);
   }
   public async delete(id: number) {
     await this.postsRepository.delete(id);

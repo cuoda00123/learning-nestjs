@@ -23,6 +23,5 @@
     "noImplicitOverride": false,
     "types": ["jest", "node"],
     "strictPropertyInitialization": false,
-    "allowDefaultProject": true
   }
 }

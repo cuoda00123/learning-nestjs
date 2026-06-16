@@ -11,11 +11,14 @@ import {
 import { GetUserParamDto } from '../dto/get-users-param.dto';
 import { AuthService } from '../../auth/providers/auth.service';
 import { User } from '../user.entity';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import type { ConfigType } from '@nestjs/config';
 import profileConf from '../config/profile.conf';
+import { UsersCreateManyProvider } from './users-create-many.provider';
+import { CreateManyUsersDto } from '../dto/create-many-users.dto';
+
 /**
  * class to connect to users table and performn business operation
  */
@@ -31,6 +34,12 @@ export class UsersService {
 
     @Inject(profileConf.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConf>,
+
+    // inject database
+    private readonly dataSource: DataSource,
+
+    // inject UsersCreateManyProvider
+    private readonly usersCreateManyProvider: UsersCreateManyProvider,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
@@ -112,5 +121,9 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  public async createMany(createManyUsersDto: CreateManyUsersDto) {
+    return await this.usersCreateManyProvider.createMany(createManyUsersDto);
   }
 }
