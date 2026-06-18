@@ -22,7 +22,7 @@ import { CreateManyUsersDto } from './dto/create-many-users.dto';
 @ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-  
+
   @Get('/:id')
   @ApiOperation({
     summary: 'Get all users',

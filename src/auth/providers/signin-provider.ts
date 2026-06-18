@@ -1,0 +1,67 @@
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  RequestTimeoutException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { UsersService } from '../../users/providers/users.service';
+import { SignInDto } from '../dto/signin-dto';
+import { HashingProvider } from './hashing-provider';
+import { JwtService } from '@nestjs/jwt';
+import type { ConfigType } from '@nestjs/config';
+import jwtConfig from '../config/jwt.config';
+
+@Injectable()
+export class SigninProvider {
+  constructor(
+    @Inject(forwardRef(() => UsersService))
+    private readonly userService: UsersService,
+
+    @Inject(HashingProvider)
+    private readonly hashingProvider: HashingProvider,
+
+    //inject hashing service
+    private readonly jwtService: JwtService,
+
+    // inject jwt configuration
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+  ) {}
+  public async signIn(signInDto: SignInDto) {
+    // find the user using email
+    // throw an error if user is not found
+    let user = await this.userService.findOneByEmail(signInDto.email);
+    // compare password
+    let isEqual: boolean = false;
+    try {
+      isEqual = await this.hashingProvider.comparePassword(signInDto.password, user.password);
+    } catch (error) {
+      throw new RequestTimeoutException(`Something went worng, please try again later`, {
+        description: `Error in comparing password, and error is ${error}`,
+      });
+    }
+
+    if (!isEqual) {
+      throw new UnauthorizedException('Password is not correct');
+    }
+    // return token
+
+    const accessToken = await this.jwtService.signAsync(
+      {
+        sub: user.id,
+        email: user.email,
+      },
+      {
+        audience: this.jwtConfiguration.audience,
+        issuer: this.jwtConfiguration.issuer,
+        expiresIn: this.jwtConfiguration.expiresIn,
+        secret: this.jwtConfiguration.secret,
+      },
+    );
+
+    return {
+      accessToken,
+    };
+  }
+}
