@@ -2,6 +2,7 @@
 
 POST http://localhost:3000/users
 Content-Type:application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE2LCJlbWFpbCI6Imtham9tYUBnbWFpbC5jb20iLCJpYXQiOjE3ODIwNzAyMDUsImV4cCI6MTc4MjA3MzgwNSwiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3Q6MzAwMCJ9.sH39786W_S1v8L5U1kK-TQErRbuw-1g-vm96fkbi3Dk
 
 {
   "firstName": "kajoma",
@@ -13,6 +14,7 @@ Content-Type:application/json
 
 POST http://localhost:3000/users/create-many
 Content-Type:application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE2LCJlbWFpbCI6Imtham9tYUBnbWFpbC5jb20iLCJpYXQiOjE3ODE4NDYzNTEsImV4cCI6MTc4MTg0OTk1MSwiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3Q6MzAwMCJ9.n2amUsSxOxowNJ8zxDT-L50upCG5yq9zLtx9VZELcmc
 {
   "users": [
     {

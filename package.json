@@ -32,13 +32,14 @@
     "@nestjs/typeorm": "10.0.2",
     "bcrypt": "5.1.1",
     "class-transformer": "0.5.1",
-    "class-validator": "^0.15.1",
+    "class-validator": "^0.14.1",
     "joi": "17.12.2",
     "pg": "8.11.5",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "typeorm": "0.3.20",
-    "typeorm@10.0.2": "link:nestjs/typeorm@10.0.2"
+    "typeorm@10.0.2": "link:nestjs/typeorm@10.0.2",
+    "validator": "13.11.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

@@ -1,20 +1,19 @@
 POST http://localhost:3000/posts
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE2LCJlbWFpbCI6Imtham9tYUBnbWFpbC5jb20iLCJpYXQiOjE3ODIwNzU0MjcsImV4cCI6MTc4MjA3OTAyNywiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3Q6MzAwMCJ9.8i2Iesuwq3Me7p3Uw2YtX3uTXRqsjnV6mRKVz3n10CA
 
 {
   "title": "What's new with nest js",
   "postType": "post",
-  "slug": "new-with-nestjs-10",
+  "slug": "new-with-nestjs-0481",
   "content": "test content",
   "status": "draft",
-  "schema": "{\r\n \"@context\": \"https://schema.org\",\r\n \"@type\": \"Person\"\r\n}",
+  "schema": "{\"@context\":\"https://schema.org\",\"@type\":\"Person\"}",
   "featuredImageUrl": "http://localhost.com/images/image1.jpg",
-  "publishOn": "2024-03-16T07:46:32+0000",
-  "tags": ["nestjs", "typescript"],
-  "metaOptions":
-    {
-      "metaValue" : "{\"sidebarEnabled\":true, \"footerActive\":true}"
-    },
-  "authorId" : 1,
-  "tags" : [1 , 3]
+  "publishOn": "2024-03-16T07:46:32.000Z",
+  "metaOptions": {
+    "metaValue": "{\"sidebarEnabled\":true,\"footerActive\":true}"
+  },
+  "authorId": 1,
+  "tags": [1, 7]
 }

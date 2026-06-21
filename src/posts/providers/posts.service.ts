@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Injectable, RequestTimeoutException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from '../../users/providers/users.service';
 import { CreatePostDto } from '../dto/create.post.dto';
 import { Post } from '../post.entity';
@@ -7,12 +7,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MetaOption } from '../../meta-options/meta-option.entity';
 import { TagsService } from '../../tags/providers/tags.service';
 import { PatchPostDto } from '../dto/patch.post.dto';
-import { postStatus, postType } from '../types/createPosts.enum';
-import { User } from '../../users/user.entity';
-import { Tag } from '../../tags/tag.entity';
+// import { postStatus, postType } from '../types/createPosts.enum';
+// import { User } from '../../users/user.entity';
+// import { Tag } from '../../tags/tag.entity';
 import { getPostsDto } from '../dto/get-post.dto';
 import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
 import { paginated } from '../../common/pagination/interfaces/paginated.interface';
+import { CreatePostProvider } from './create-post.provider';
+import { ActiveUserData } from '../../auth/interfaces/active-user-data.interface';
 
 @Injectable()
 export class PostsService {
@@ -28,24 +30,13 @@ export class PostsService {
     private readonly tagsService: TagsService,
 
     private readonly paginationProvider: PaginationProvider,
+
+    //inject create post provider
+    private readonly createPostProvider: CreatePostProvider,
   ) {}
 
-  public async create(createPostDto: CreatePostDto) {
-    const author = await this.usersService.findOneById(createPostDto.authorId);
-
-    if (!author) {
-      throw new BadRequestException(`User with id ${createPostDto.authorId} not found`);
-    }
-
-    const tags = await this.tagsService.findMultipleTags(createPostDto.tags!);
-
-    const post = this.postsRepository.create({
-      ...createPostDto,
-      author,
-      tags,
-    });
-
-    return this.postsRepository.save(post);
+  public async create(createPostDto: CreatePostDto, user: ActiveUserData) {
+    return this.createPostProvider.create(createPostDto, user);
   }
 
   public async findAllById(userId: number) {
