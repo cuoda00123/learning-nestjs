@@ -40,7 +40,7 @@ export class SigninProvider {
     // compare password
     let isEqual: boolean = false;
     try {
-      isEqual = await this.hashingProvider.comparePassword(signInDto.password, user.password);
+      isEqual = await this.hashingProvider.comparePassword(signInDto.password, user.password!);
     } catch (error) {
       throw new RequestTimeoutException(`Something went worng, please try again later`, {
         description: `Error in comparing password, and error is ${error}`,
