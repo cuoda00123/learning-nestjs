@@ -2,12 +2,12 @@
 
 POST http://localhost:3000/users
 Content-Type:application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE2LCJlbWFpbCI6Imtham9tYUBnbWFpbC5jb20iLCJpYXQiOjE3ODIwNzAyMDUsImV4cCI6MTc4MjA3MzgwNSwiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3Q6MzAwMCJ9.sH39786W_S1v8L5U1kK-TQErRbuw-1g-vm96fkbi3Dk
+
 
 {
   "firstName": "kajoma",
   "lastName": "devi",
-  "email": "kajoma@gmail.com",
+  "email": "kajoma-devi-9@gmail.com",
   "password": "12qwQW@?,,"
 }
 

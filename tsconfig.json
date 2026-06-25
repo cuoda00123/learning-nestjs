@@ -21,7 +21,7 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "noImplicitOverride": false,
-    "types": ["jest", "node"],
-    "strictPropertyInitialization": false,
+    "types": ["jest", "node", "multer"],
+    "strictPropertyInitialization": false
   }
 }
