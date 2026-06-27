@@ -35,7 +35,7 @@ export class CreateUserProvider {
         },
       });
     } catch (error) {
-      throw new RequestTimeoutException(`Something went worng, please try again later`, {
+      throw new BadRequestException(`Something went worng, please try again later`, {
         description: `Error in finding user, and error is ${error}`,
       });
     }
@@ -54,7 +54,7 @@ export class CreateUserProvider {
     try {
       newUser = await this.usersRepository.save(newUser);
     } catch (error) {
-      throw new RequestTimeoutException(`Something went worng, please try again later`, {
+      throw new BadRequestException(`Something went worng, please try again later`, {
         description: `Error in saving user, and error is ${error}`,
       });
     }

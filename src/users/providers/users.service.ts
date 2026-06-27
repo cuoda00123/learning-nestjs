@@ -1,21 +1,21 @@
 import {
   //BadRequestException,
-  forwardRef,
+  // forwardRef,
   HttpException,
   HttpStatus,
-  Inject,
+  // Inject,
   Injectable,
   NotFoundException,
   RequestTimeoutException,
 } from '@nestjs/common';
 import { GetUserParamDto } from '../dto/get-users-param.dto';
-import { AuthService } from '../../auth/providers/auth.service';
+//import { AuthService } from '../../auth/providers/auth.service';
 import { User } from '../user.entity';
-import { Repository, DataSource } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
-import type { ConfigType } from '@nestjs/config';
-import profileConf from '../config/profile.conf';
+// import type { ConfigType } from '@nestjs/config';
+// import profileConf from '../config/profile.conf';
 import { UsersCreateManyProvider } from './users-create-many.provider';
 import { CreateManyUsersDto } from '../dto/create-many-users.dto';
 import { CreateUserProvider } from './create-user.provider';
@@ -30,18 +30,9 @@ import { GoogleUser } from '../interfaces/google-user.interface';
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
-
     // injecting usersRepository
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-
-    @Inject(profileConf.KEY)
-    private readonly profileConfiguration: ConfigType<typeof profileConf>,
-
-    // inject database
-    private readonly dataSource: DataSource,
 
     // inject UsersCreateManyProvider
     private readonly usersCreateManyProvider: UsersCreateManyProvider,
